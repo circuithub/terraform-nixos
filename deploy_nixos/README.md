@@ -103,7 +103,7 @@ see also:
 |------|-------------|------|---------|:--------:|
 | NIX\_PATH | Allow to pass custom NIX\_PATH | `string` | `""` | no |
 | build\_on\_target | Avoid building on the deployer. Must be true or false. Has no effect when deploying from an incompatible system. Unlike remote builders, this does not require the deploying user to be trusted by its host. | `string` | `false` | no |
-| config | NixOS configuration to be evaluated. This argument is required unless 'nixos\_config' is given | `string` | `""` | no |
+| config | NixOS configuration to be evaluated. This argument is required unless 'nixos\_config' is given. If 'hermetic' is 'true' then this may be a nix expression that evaluates to a configuration. | `string` | `""` | no |
 | config\_pwd | Directory to evaluate the configuration in. This argument is required if 'config' is given | `string` | `""` | no |
 | extra\_build\_args | List of arguments to pass to the nix builder | `list(string)` | `[]` | no |
 | extra\_eval\_args | List of arguments to pass to the nix evaluation | `list(string)` | `[]` | no |
