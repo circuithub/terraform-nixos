@@ -19,6 +19,7 @@ variable "ssh_private_key" {
   type        = string
   description = "Content of private key used to connect to the target_host"
   default     = ""
+  sensitive   = true
 }
 
 variable "ssh_private_key_file" {
@@ -188,6 +189,8 @@ resource "null_resource" "deploy_nixos" {
 
   # do the actual deployment
   provisioner "local-exec" {
+    # so that terraform does not print out the command and displays the secret values
+    quiet = true
     interpreter = concat([
       "${path.module}/nixos-deploy.sh",
       data.external.nixos-instantiate.result["drv_path"],
@@ -195,7 +198,11 @@ resource "null_resource" "deploy_nixos" {
       "${var.target_user}@${var.target_host}",
       var.target_port,
       local.build_on_target,
-      local.ssh_private_key == "" ? "-" : local.ssh_private_key,
+      # The `ssh_private_key` value is sensitive and should not be logged, but
+      # having it sensitive causes all the logs to be redacted which is annoying,
+      # the deploy script itself does not print this value and when quiet is set
+      # to true then terraform also won't print it, so we discard the sensitive tag
+      nonsensitive(local.ssh_private_key == "" ? "-" : local.ssh_private_key),
       "switch",
       var.delete_older_than,
       ],
