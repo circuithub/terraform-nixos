@@ -202,7 +202,7 @@ resource "null_resource" "deploy_nixos" {
       # having it sensitive causes all the logs to be redacted which is annoying,
       # the deploy script itself does not print this value and when quiet is set
       # to true then terraform also won't print it, so we discard the sensitive tag
-      nonsensitive(local.ssh_private_key == "" ? "-" : local.ssh_private_key),
+      nonsensitive((local.ssh_private_key == "" || local.ssh_private_key == null) ? "-" : local.ssh_private_key),
       "switch",
       var.delete_older_than,
       ],
