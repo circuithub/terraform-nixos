@@ -16,12 +16,12 @@ sshOpts=(
   #-o "ControlPersist=60"
   # Avoid issues with IP re-use. This disable TOFU security.
   -o "StrictHostKeyChecking=no"
-  -o "UserKnownHostsFile=/dev/null"
-  -o "GlobalKnownHostsFile=/dev/null"
+  #-o "UserKnownHostsFile=/dev/null"
+  #-o "GlobalKnownHostsFile=/dev/null"
   # interactive authentication is not possible
-  -o "BatchMode=yes"
+  #-o "BatchMode=yes"
   # verbose output for easier debugging
-  -vv
+  -vvv
 )
 
 ###  Argument parsing ###
