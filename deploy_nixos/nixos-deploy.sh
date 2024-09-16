@@ -12,8 +12,8 @@ buildArgs=(
 profile=/nix/var/nix/profiles/system
 # will be set later
 sshOpts=(
-  -o "ControlMaster=auto"
-  -o "ControlPersist=60"
+  #-o "ControlMaster=auto"
+  #-o "ControlPersist=60"
   # Avoid issues with IP re-use. This disable TOFU security.
   -o "StrictHostKeyChecking=no"
   -o "UserKnownHostsFile=/dev/null"
@@ -95,7 +95,7 @@ setupControlPath() {
 
 ### Main ###
 
-setupControlPath
+# setupControlPath
 
 if [[ "${buildOnTarget:-false}" == true ]]; then
 
