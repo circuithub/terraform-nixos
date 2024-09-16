@@ -116,6 +116,7 @@ else
 
   # Upload build results
   log "uploading build results"
+  log "outPath=$outPath"
   copyToTarget "$outPath" --gzip --use-substitutes
 
 fi
