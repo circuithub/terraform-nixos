@@ -20,8 +20,6 @@ sshOpts=(
   -o "GlobalKnownHostsFile=/dev/null"
   # interactive authentication is not possible
   -o "BatchMode=yes"
-  # verbose output for easier debugging
-  -v
 )
 
 ###  Argument parsing ###
@@ -34,11 +32,18 @@ buildOnTarget="$5"
 sshPrivateKey="$6"
 action="$7"
 deleteOlderThan="$8"
-shift 8
+performGC="$9"
+verboseSSH="$10"
+shift 10
 
 # remove the last argument
 set -- "${@:1:$(($# - 1))}"
 buildArgs+=("$@")
+
+
+if [[ "${verboseSSH:-false}" == true ]]; then
+  sshOpts+=( -v )
+fi
 
 sshOpts+=( -p "${targetPort}" )
 
@@ -126,8 +131,13 @@ targetHostCmd nix-env --profile "$profile" --set "$outPath"
 targetHostCmd "$outPath/bin/switch-to-configuration" "$action"
 
 # Cleanup previous generations
-log "collecting old nix derivations"
+log "deleting old nix derivations"
 # Deliberately not quoting $deleteOlderThan so the user can configure something like "1 2 3" 
 # to keep generations with those numbers
 targetHostCmd "nix-env" "--profile" "$profile" "--delete-generations" $deleteOlderThan
-targetHostCmd "nix-store" "--gc"
+if [[ "${performGC:-true}" == true ]]; then
+  log "performing GC"
+  targetHostCmd "nix-store" "--gc"
+else
+  log "skipping GC since perform_gc is false"
+fi

@@ -112,6 +112,18 @@ variable "delete_older_than" {
   default     = "+1"
 }
 
+variable "perform_gc" {
+  type        = bool
+  description = "If false then no GC will be perfomed after the deploy."
+  default     = true
+}
+
+variable "verbose_ssh" {
+  type        = bool
+  description = "If true the ssh connection will be made with verbose mode to aid debugging."
+  default     = false
+}
+
 # --------------------------------------------------------------------------
 
 locals {
@@ -205,6 +217,8 @@ resource "null_resource" "deploy_nixos" {
       nonsensitive((local.ssh_private_key == "" || local.ssh_private_key == null) ? "-" : local.ssh_private_key),
       "switch",
       var.delete_older_than,
+      var.perform_gc,
+      var.verbose_ssh
       ],
       local.extra_build_args
     )
